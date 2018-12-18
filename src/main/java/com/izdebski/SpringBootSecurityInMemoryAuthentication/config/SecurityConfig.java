@@ -12,15 +12,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.csrf().disable().authorizeRequests().antMatchers("/api/tickets/**").
+        /*http.csrf().disable().authorizeRequests().antMatchers("/api/tickets/**").
                 hasAnyRole("admin","user").and().formLogin();
         http.csrf().disable().authorizeRequests().antMatchers("/api/admin/**")
+                .hasAnyRole("admin").and().formLogin();*/
+
+
+        http.csrf().disable().authorizeRequests().antMatchers("/api/tickets/**")
+                .hasAnyRole("admin","user").and().authorizeRequests().antMatchers("/api/admin/**")
                 .hasAnyRole("admin").and().formLogin();
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
-        auth.inMemoryAuthentication().withUser("sean").password("pass@123").roles("user");
-        auth.inMemoryAuthentication().withUser("martin").password("pass@123").roles("user","admin");
+
+        auth.inMemoryAuthentication().withUser("sean").password("pass@123").roles("user").and()
+                .withUser("martin").password("pass@123").roles("user", "admin");
     }
 }
